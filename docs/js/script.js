@@ -76,7 +76,7 @@
                 </div>
             </div>`;
             
-            copyText += `${item.name}: ${rounded.toLocaleString()}.- (exact: ${exact.toFixed(2)})\n`;
+            copyText += `${item.name}: ${rounded.toLocaleString()}.- \n`;
         });
 
         currentSummary = copyText + `------------------\nยอดรวมสุทธิ: ${grandTotalExact.toLocaleString(undefined, {minimumFractionDigits: 2})} บาท`;
