@@ -70,9 +70,11 @@
             resultHtml += `
             <div class="result-item">
                 <span style="font-size:14px;"><i class="fa-solid fa-caret-right" style="color:var(--primary); margin-right:5px;"></i> ${item.name}</span>
-                <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
                     <span class="price-final">${rounded.toLocaleString()}.-</span>
-                    <span class="price-exact">${exact.toFixed(2)}</span>
+                    <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual('${item.name}', ${rounded})">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
                 </div>
             </div>`;
             
@@ -85,6 +87,11 @@
         document.getElementById('individualResults').style.display = 'block';
         document.getElementById('totalExact').innerText = grandTotalExact.toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('totalRounded').innerText = grandTotalRounded.toLocaleString();
+    }
+
+    function copyIndividual(name, amount) {
+        navigator.clipboard.writeText(`${name}: ${amount.toLocaleString()}.-`);
+        alert(`คัดลอกยอดของ ${name} เรียบร้อยแล้ว`);
     }
 
     function copyToClipboard() {
