@@ -22,6 +22,17 @@
         document.getElementById('itemContainer').appendChild(div);
     }
 
+    function copyIndividual(btn, name, amount) {
+        navigator.clipboard.writeText(`${name}: ${amount.toLocaleString()}.-`);
+        
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+        }, 1500);
+    }
+
     function update() {
         const names = document.querySelectorAll('.name-in');
         const priceInputs = document.querySelectorAll('.price-in');
@@ -72,7 +83,7 @@
                 <span style="font-size:14px;"><i class="fa-solid fa-caret-right" style="color:var(--primary); margin-right:5px;"></i> ${item.name}</span>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span class="price-final">${rounded.toLocaleString()}.-</span>
-                    <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual('${item.name}', ${rounded})">
+                    <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual(this, '${item.name}', ${rounded})" title="คัดลอกยอดของ ${item.name}">
                         <i class="fa-solid fa-copy"></i>
                     </button>
                 </div>
@@ -87,11 +98,6 @@
         document.getElementById('individualResults').style.display = 'block';
         document.getElementById('totalExact').innerText = grandTotalExact.toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('totalRounded').innerText = grandTotalRounded.toLocaleString();
-    }
-
-    function copyIndividual(name, amount) {
-        navigator.clipboard.writeText(`${name}: ${amount.toLocaleString()}.-`);
-        alert(`คัดลอกยอดของ ${name} เรียบร้อยแล้ว`);
     }
 
     function copyToClipboard() {
