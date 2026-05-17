@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Splitter V1.0.1</title>
+    <title>Bill Splitter V1.0.2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #0071e3; --text: #1d1d1f; --bg: #f5f5f7; --card-bg: #ffffff; --success: #34c759; }
@@ -49,7 +49,7 @@
 <body>
 
 <div class="container">
-    <h2><i class="fa-solid fa-receipt"></i> Bill Splitter V1.0.1</h2>
+    <h2><i class="fa-solid fa-receipt"></i> Bill Splitter V1.0.2</h2>
 
     <div class="section">
         <div class="checkbox-group">
@@ -109,12 +109,16 @@
             <span class="summary-label" style="color: #fff;"><i class="fa-solid fa-wallet"></i> ยอดเก็บจริง</span>
             <span id="totalRounded">0</span>
         </div>
+        <div class="summary-row total" style="color: #ff9f0a;">
+            <span class="summary-label" style="color: #fff;"><i class="fa-solid fa-user-minus"></i> ยอดหลังหักส่วนตัว</span>
+            <span id="totalAfterDeduction">0</span>
+        </div>
     </div>
 
     <button class="btn btn-reset" onclick="resetForm()"><i class="fa-solid fa-trash-can"></i> ล้างข้อมูล</button>
 </div>
 
-<footer>Version 1.0.1</footer>
+<footer>Version 1.0.2</footer>
 
 <script src="js/script.js"></script>
 

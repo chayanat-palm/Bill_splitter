@@ -1,4 +1,5 @@
     let currentSummary = "";
+    let selectedPersonIndex = -1;
 
     function parseMath(str) {
         if (!str) return 0;
@@ -6,6 +7,15 @@
             const sanitized = str.replace(/[^-()\d/*+.]/g, '');
             return new Function(`return (${sanitized})`)() || 0;
         } catch (e) { return 0; }
+    }
+
+    function toggleSelection(index) {
+        if (selectedPersonIndex === index) {
+            selectedPersonIndex = -1;
+        } else {
+            selectedPersonIndex = index;
+        }
+        update();
     }
 
     function addItem() {
@@ -25,6 +35,7 @@
 
     function removeRow(btn) {
         btn.parentElement.remove();
+        selectedPersonIndex = -1;
         update();
     }
 
@@ -66,6 +77,7 @@
             document.getElementById('individualResults').style.display = 'none';
             document.getElementById('totalExact').innerText = "0.00";
             document.getElementById('totalRounded').innerText = "0";
+            document.getElementById('totalAfterDeduction').innerText = "0";
             return;
         }
 
@@ -75,28 +87,36 @@
         let resultHtml = "";
         let copyText = "🧾 สรุปยอดค่าอาหาร\n------------------\n";
 
+        let personNetAmounts = [];
         data.forEach(item => {
             let ratio = totalFoodTaxed > 0 ? (item.baseTaxed / totalFoodTaxed) : 0;
             let exact = (item.baseTaxed + extraPerPerson) - (discount * ratio);
             exact = Math.max(0, exact);
-            
             let rounded = Math.ceil(exact);
             grandTotalExact += exact;
             grandTotalRounded += rounded;
+            personNetAmounts.push(rounded);
+            
+            copyText += `${item.name}: ${rounded.toLocaleString()}.- \n`;
+        });
 
+        let selectedPersonAmount = selectedPersonIndex !== -1 ? personNetAmounts[selectedPersonIndex] : 0;
+
+        data.forEach((item, index) => {
+            const isSelected = index === selectedPersonIndex;
             resultHtml += `
-            <div class="result-item">
-                <span style="font-size:14px;"><i class="fa-solid fa-caret-right" style="color:var(--primary); margin-right:5px;"></i> ${item.name}</span>
+            <div class="result-item" style="${isSelected ? 'background: #e1f5fe; border-radius: 8px;' : ''}">
+                <span style="font-size:14px; cursor:pointer;" onclick="toggleSelection(${index})">
+                    <i class="fa-solid fa-user" style="color:${isSelected ? 'var(--primary)' : '#86868b'}; margin-right:5px;"></i> ${item.name}
+                </span>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 11px; color: #86868b;">${exact.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                    <span class="price-final">${rounded.toLocaleString()}.-</span>
-                    <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual(this, '${item.name}', ${rounded})" title="คัดลอกยอดของ ${item.name}">
+                    <span style="font-size: 11px; color: #86868b;">${((item.baseTaxed + extraPerPerson) - (discount * (totalFoodTaxed > 0 ? (item.baseTaxed / totalFoodTaxed) : 0))).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    <span class="price-final">${personNetAmounts[index].toLocaleString()}.-</span>
+                    <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual(this, '${item.name}', ${personNetAmounts[index]})" title="คัดลอกยอดของ ${item.name}">
                         <i class="fa-solid fa-copy"></i>
                     </button>
                 </div>
             </div>`;
-            
-            copyText += `${item.name}: ${rounded.toLocaleString()}.- \n`;
         });
 
         currentSummary = copyText + `------------------\nยอดรวมสุทธิ: ${grandTotalExact.toLocaleString(undefined, {minimumFractionDigits: 2})} บาท`;
@@ -105,6 +125,9 @@
         document.getElementById('individualResults').style.display = 'block';
         document.getElementById('totalExact').innerText = grandTotalExact.toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('totalRounded').innerText = grandTotalRounded.toLocaleString();
+        
+        const finalNet = grandTotalExact - selectedPersonAmount;
+        document.getElementById('totalAfterDeduction').innerText = finalNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
 
     function copyToClipboard() {
@@ -125,6 +148,7 @@
             document.querySelectorAll('.price-in').forEach(input => input.value = '');
             document.getElementById('extraFee').value = '';
             document.getElementById('totalDiscount').value = '';
+            selectedPersonIndex = -1;
             update();
         }
     }
