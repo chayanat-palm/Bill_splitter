@@ -82,6 +82,7 @@
             <div class="result-item">
                 <span style="font-size:14px;"><i class="fa-solid fa-caret-right" style="color:var(--primary); margin-right:5px;"></i> ${item.name}</span>
                 <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 11px; color: #86868b;">${exact.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     <span class="price-final">${rounded.toLocaleString()}.-</span>
                     <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual(this, '${item.name}', ${rounded})" title="คัดลอกยอดของ ${item.name}">
                         <i class="fa-solid fa-copy"></i>
@@ -114,5 +115,10 @@
     }
 
     function resetForm() {
-        if(confirm("ล้างข้อมูลทั้งหมด?")) location.reload();
+        if(confirm("ล้างข้อมูลราคาและยอดทั้งหมด?")) {
+            document.querySelectorAll('.price-in').forEach(input => input.value = '');
+            document.getElementById('extraFee').value = '';
+            document.getElementById('totalDiscount').value = '';
+            update();
+        }
     }
