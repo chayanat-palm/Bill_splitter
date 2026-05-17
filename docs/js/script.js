@@ -18,8 +18,14 @@
                          <div class="input-group" style="flex: 1;">
                             <i class="fa-solid fa-baht-sign"></i>
                             <input type="text" placeholder="ราคา" class="price-in">
-                         </div>`;
+                         </div>
+                         <button class="btn" style="width: auto; padding: 12px; background: #ffe5e5; color: #ff3b30;" onclick="removeRow(this)"><i class="fa-solid fa-trash-can"></i></button>`;
         document.getElementById('itemContainer').appendChild(div);
+    }
+
+    function removeRow(btn) {
+        btn.parentElement.remove();
+        update();
     }
 
     function copyIndividual(btn, name, amount) {
