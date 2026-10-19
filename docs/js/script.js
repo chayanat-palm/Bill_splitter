@@ -156,12 +156,13 @@
         data.forEach(item => {
             let ratio = totalFoodTaxed > 0 ? (item.baseTaxed / totalFoodTaxed) : 0;
             let exact = (item.baseTaxed + extraPerPerson) - (discount * ratio);
-            exact = Math.max(0, exact);
+            // round to satang first so a tiny hidden fraction (e.g. 57.003) doesn't bump the ceil to the next baht
+            exact = Math.round(Math.max(0, exact) * 100) / 100;
             let rounded = Math.ceil(exact);
             grandTotalExact += exact;
             grandTotalRounded += rounded;
             personNetAmounts.push(rounded);
-            currentResults.push({ name: item.name, amount: rounded });
+            currentResults.push({ name: item.name, amount: rounded, exact });
             
             copyText += `${item.name}: ${rounded.toLocaleString()}.- \n`;
         });
@@ -176,7 +177,7 @@
                     <i class="fa-solid fa-user" style="color:${isSelected ? 'var(--primary)' : '#86868b'}; margin-right:5px;"></i> ${escapeHtml(item.name)}
                 </span>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 11px; color: #86868b;">${((item.baseTaxed + extraPerPerson) - (discount * (totalFoodTaxed > 0 ? (item.baseTaxed / totalFoodTaxed) : 0))).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    <span style="font-size: 11px; color: #86868b;">${currentResults[index].exact.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     <span class="price-final">${personNetAmounts[index].toLocaleString()}.-</span>
                     <button class="btn" style="padding: 4px 8px; font-size: 10px; width: auto;" onclick="copyIndividual(this, ${index})" title="คัดลอกยอดของ ${escapeHtml(item.name)}">
                         <i class="fa-solid fa-copy"></i>
