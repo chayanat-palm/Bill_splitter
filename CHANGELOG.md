@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.4] - 2026-10-19
+- Fixed rounding: per-person amounts are rounded to satang before rounding up, so a value shown as 57.00 is charged 57 instead of 58.
+- Per-person exact amount shown in the list now matches the value used for rounding.
+
 ## [1.0.3] - 2026-09-30
 - Fixed copy button breaking when a name contains `'` or HTML; names are now escaped.
 - Saved all inputs to `localStorage` so data survives page refresh.
